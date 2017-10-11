@@ -1,0 +1,12 @@
+block content
+	body
+		nav.navbar.navbar-dark.bg-primary
+			a.navbar-brand(href='#') ChatApp
+				div.navbar-nav
+					a.nav-item.nav-link(href='#') Home
+				form(method='GET' action='/logout')
+					if (name)
+						button.btn.btn-danger(type='submit' href='/logout') Logout
+					else
+						button.btn.btn-danger(type='submit' href='/login') Login
+	          

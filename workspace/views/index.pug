@@ -1,0 +1,15 @@
+extends layout
+block content
+	include nav.pug
+		br
+		.container
+			.row
+				.text-box.col
+					div#list
+				.col
+					form#form(method='POST' action='/')
+						.input-group
+							input#chat_input.form-control(type='text', placeholder='...')
+							span.input-group-btn
+								input.btn.btn-primary(type='submit' value='Send')
+		

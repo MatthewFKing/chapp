@@ -1,0 +1,56 @@
+.text-box{
+	height: 300px;
+	overflow: auto;
+	border: 1px solid black;
+}
+
+p{
+	border:1px solid lightblue;
+	padding: 5px;
+	border-radius: 15%;
+	margin:5px;
+	margin-top: 0;
+	background-color: lightblue;
+	color:black;
+}
+
+h5{
+	margin-top: 5px;
+}
+
+.list-group-item p{
+	display: inline;
+}
+
+.list-group-item h5{
+	display: inline;
+	color: green;
+}
+
+.list-group-item{
+	margin-left: auto;
+	text-align: right;
+	word-wrap: break-word;
+	border:none;
+	display: flex;
+	flex-direction: row-reverse;
+}
+.not-me{
+	align-self:flex-start;
+	display: flex;
+	flex-direction: row;
+}
+
+.not-me>h5{
+	display: inline;
+	color: blue;
+}
+
+.not-me>p{
+	background-color: lightgreen;
+	border-color: lightgreen;
+}
+
+.navbar button{
+	float:right;
+}
