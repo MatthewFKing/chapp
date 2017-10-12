@@ -60,17 +60,17 @@ app.use(function(err, req, res, next) {
 
 io.on('connection', (socket) => {
   socket.emit('working', socket.id);
-  console.log('user joined');
   socket.on('message', (msg) => {
     console.log(socket.id);
 		let data = {
-			name: socket.request.name,
+			name: '',
 			msg: msg,
 			socket: socket.id
 		};
     io.emit('message', data);
   });
 });
+
 
 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {

@@ -1,16 +1,15 @@
 block content
 	body
 		nav.navbar.navbar-dark.bg-primary
-			a.navbar-brand(href='#') ChatApp
+			a.navbar-brand(href='#') Chapp
 				div.navbar-nav
 					a.nav-item.nav-link(href='/') Home
 					a.nav-item.nav-link(href='/profile') Profile
-					a.nav-item.nav-link(href='/signup') Sign Up
-					a.nav-item.nav-link(href='/test') TestUser
-					a.nav-item.nav-link(href='/friend-test') TestFriend
-					a.nav-item.nav-link(href='/msg-test') TestMessage
+					a.nav-item.nav-link(href='/users') Users
+					if !currentUser
+						a.nav-item.nav-link(href='/signup') Sign Up
 				form(method='GET' action='/logout')
-					if (name)
+					if currentUser
 						button.btn.btn-danger(type='submit' href='/logout') Logout
 					else
 						button.btn.btn-danger(type='submit' href='/login') Login

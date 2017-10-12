@@ -5,6 +5,5 @@ block content
 		.row
 			.col-md-offset-2
 				h1.display-4 User List
-				ul
-					each val in data
-						li #{val.name}
+				each val, obj in data
+					a.list-group-item-action.list-group-item(href='/profile/' + val._id) #{val.name}

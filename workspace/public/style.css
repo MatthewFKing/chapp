@@ -18,16 +18,16 @@ h5{
 	margin-top: 5px;
 }
 
-.list-group-item p{
+.me p{
 	display: inline;
 }
 
-.list-group-item h5{
+.me h5{
 	display: inline;
 	color: green;
 }
 
-.list-group-item{
+.me{
 	margin-left: auto;
 	text-align: right;
 	word-wrap: break-word;

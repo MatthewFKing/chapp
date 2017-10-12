@@ -3,24 +3,40 @@ const router = express.Router();
 const User = require('../models/user');
 const mid = require('../middleware');
 
+router.get('/profile/:id', (req, res, next) =>{
+   console.log(req.params.id); 
+   User.findById(req.params.id)
+    .exec((error, user) =>{
+       if (error) {
+           return next(error);
+       } else {
+           res.render('profile', {data: user});
+       }
+           
+       });
+});
+
 router.get('/profile', mid.requiresLogin, (req, res, next) => {
 	User.findById(req.session.userId)
 		.exec((error, user) =>{
 			if (error) {
 				return next(error);
 			} else {
-				res.render('profile', {name: user.name});
+				res.render('profile', {data: user});
 			}
 		});
 });
 
-router.get('/', (req, res) =>{
+router.get('/', (req, res, next) =>{
+    console.log(req.session);
 	User.findById(req.session.userId)
 		.exec((error, user) =>{
 			if (error) {
 				return next(error);
+			} else if (!user) {
+				res.render('login');
 			} else {
-				res.render('index', {name: user.name});
+			    res.render('index', {name: user.name});
 			}
 		});
 });
@@ -30,7 +46,7 @@ router.get('/login', (req, res) =>{
 });
 
 router.get('/users', (req, res, next) =>{
-	User.find({},{name: 1, _id:0})
+	User.find({},{name: 1})
 		.exec((error, users) =>{
 			if (error) {
 				return next(error);
@@ -40,7 +56,7 @@ router.get('/users', (req, res, next) =>{
 		});
 });
 
-router.get('/logout', (req, res) =>{
+router.get('/logout', (req, res, next) =>{
   if(req.session){
 		req.session.destroy(function(err){
 			if (err) {
@@ -141,25 +157,28 @@ router.get('/test', (req, res, next) =>{
 
 });
 
-router.get('/friend-test', (req, res, next) =>{
-
-    let userData = {
-      name: 'test2',
-      objectId: '59de6939420fa86788a02f98'
-    };
-    let email = 'test@test.com';
-
-  User.addFriend(userData, email, (error, user) =>{
-     if (error){
-         let err = new Error('Nope');
-         err.status = 401;
-         next(err);
-     } else {
-         console.log(user);
-     }
-  });
-
-});
+router.get('/reqfriend/:id', (req, res, next) =>{
+    console.log(req.params.id);
+    console.log('hello');
+    User.findById(req.params.id)
+        .exec((error, user) =>{
+           if (error){
+               return next(error);
+           } else {
+                    User.addFriend(user, req.session.userId, (error, user) => {
+                       if (error){
+                           let err = new Error('Not Friends');
+                           err.status = 401;
+                           next(err);
+                       } else {
+                           console.log('friends');
+                       }
+                    
+                    });
+           }
+                });
+           });
+    
 
 router.get('/msg-test', (req, res, next) => {
     let userData = {

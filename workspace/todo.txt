@@ -17,9 +17,12 @@ views for everything
 	unread messages
 	view profile
 	complete login page
+	titles for all the pages
 create sessions for the logged in user
 divide mongoose models
 encryption for user passwords
+get name to work on chat
+way to post previews of pages/ articles
 
 Done:
 create a user

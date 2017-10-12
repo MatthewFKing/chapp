@@ -40,8 +40,9 @@ let UserSchema = new Schema({
     inbox: [ConversationSchema]
 });
 
-UserSchema.statics.addFriend = (userData,email, callback) =>{
-    User.findOne({email: email})
+UserSchema.statics.addFriend = (toData,fromId, callback) =>{
+    console.log(fromId);
+    User.findOne({_id: fromId})
         .exec((error, user) =>{
            if (error) {
                return callback(error);
@@ -51,13 +52,14 @@ UserSchema.statics.addFriend = (userData,email, callback) =>{
                return callback(err);
            }
            let newFriend = {
-               userID: userData.objectId,
-               name: userData.name,
+               userID: toData._id,
+               name: toData.name,
                status: 'friend'
                };
                
             user.friends.push(newFriend);
             user.save();
+            
             return (null, user);
         });
 };

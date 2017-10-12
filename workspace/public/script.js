@@ -1,5 +1,4 @@
 			var socket = io.connect();
-			//let id;
 			$('#form').submit(function(){
 					var input = $('#chat_input').val();
 					socket.emit('message', input);
@@ -12,7 +11,7 @@
 					let msg = $('<p>').text(data.msg);
 					if (data.socket == socket.id){
 						let name = $('<h5>').text('- ' + data.name);
-						$('#list').append($('<div>').addClass('list-group-item').append(name).append(msg));
+						$('#list').append($('<div>').addClass('list-group-item me').append(name).append(msg));
 						$('.text-box').scrollTop($('.text-box')[0].scrollHeight);
 					} else {
 						let name = $('<h5>').text(data.name + ' -');
