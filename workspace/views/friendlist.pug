@@ -1,0 +1,9 @@
+extends layout
+block content
+	include nav.pug
+	.main.container.clearfix
+		.row
+			.col-md-8.col-md-offset-2
+				h1.display-4 Friend List
+				each val in data
+					a.list-group-item-action.list-group-item(href='/profile/' + val.userID) #{val.name}

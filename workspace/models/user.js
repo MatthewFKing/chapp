@@ -40,30 +40,6 @@ let UserSchema = new Schema({
     inbox: [ConversationSchema]
 });
 
-UserSchema.statics.addFriend = (toData,fromId, callback) =>{
-    console.log(fromId);
-    User.findOne({_id: fromId})
-        .exec((error, user) =>{
-           if (error) {
-               return callback(error);
-           } else if (!user) {
-               let err = new Error('No User Found');
-               err.status = 401;
-               return callback(err);
-           }
-           let newFriend = {
-               userID: toData._id,
-               name: toData.name,
-               status: 'friend'
-               };
-               
-            user.friends.push(newFriend);
-            user.save();
-            
-            return (null, user);
-        });
-};
-
 UserSchema.statics.sendMsg = (userData, email, msg, callback) =>{
     User.findOne({email: email})
         .exec((error, user) =>{

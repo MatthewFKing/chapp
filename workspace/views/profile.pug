@@ -7,7 +7,9 @@ block content
 				h1.display-4
 					img.avatar.img-circle.img-thumbnail.hidden-xs-down(src='/images/avatar.png', alt='avatar', width='20%')
 					| #{data.name}
-				h4.display-5 Friends: #{data.friends.length}
-				h4.display-5 #{data._id}
+				a.display-5.list-group-item(href='/friendlist/' + data._id) Friends: #{data.friends.length}
+				h6.display-6.list-group-item #{data.email}
+				if (data._id == currentUser)
+					a.display-5.list-group-item(href='/inbox/' + data._id) Inbox: #{data.inbox.length}
 				form(method='GET' action='/reqfriend/' + data._id)
 					button.btn.btn-primary(type='submit') Make Friends

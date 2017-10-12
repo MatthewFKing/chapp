@@ -153,31 +153,39 @@ router.get('/test', (req, res, next) =>{
     });
         }
     });
+});
 
+router.get('/post', (req,res,next) =>{
+   res.render('post'); 
+});
 
+router.get('/friendlist/:id', (req, res, next)=> {
+   User.findById(req.params.id, (err, user) =>{
+      if (err) console.log(err);
+      res.render('friendlist', {data: user.friends});
+   });
 });
 
 router.get('/reqfriend/:id', (req, res, next) =>{
-    console.log(req.params.id);
-    console.log('hello');
-    User.findById(req.params.id)
-        .exec((error, user) =>{
-           if (error){
-               return next(error);
-           } else {
-                    User.addFriend(user, req.session.userId, (error, user) => {
-                       if (error){
-                           let err = new Error('Not Friends');
-                           err.status = 401;
-                           next(err);
-                       } else {
-                           console.log('friends');
-                       }
-                    
-                    });
-           }
+    User.findById(req.session.userId, (err, me) =>{
+        if (err) console.log(err);
+        User.findById(req.params.id, (err, reqdFriend) =>{
+           if (err) console.log(err);
+                me.friends.push({
+                    userID: reqdFriend._id,
+                    name: reqdFriend.name,
+                    status: 'Pending'
                 });
-           });
+                reqdFriend.friends.push({
+                   userID: me._id,
+                   name: me.name,
+                   status: 'Pending'
+                });
+                me.save();
+                reqdFriend.save();
+        });
+    });
+});
     
 
 router.get('/msg-test', (req, res, next) => {
