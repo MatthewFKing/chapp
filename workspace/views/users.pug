@@ -1,0 +1,10 @@
+extends layout
+block content
+	include nav.pug
+	.main.container
+		.row
+			.col-md-offset-2
+				h1.display-4 User List
+				ul
+					each val in data
+						li #{val.name}

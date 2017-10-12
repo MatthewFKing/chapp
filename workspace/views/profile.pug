@@ -1,0 +1,9 @@
+extends layout
+block content
+	include nav.pug
+	.main.container.clearfix
+		.row
+			.col-md-8.col-md-offset-2
+				h1.display-4
+					img.avatar.img-circle.img-thumbnail.hidden-xs-down(src='/images/avatar.png', alt='avatar', width='20%')
+					| #{name}

@@ -1,0 +1,45 @@
+To-Do:
+create a list of messages for each conversation
+make friends unique
+add pending request for friends
+add friend to both the sender and receiver
+add a way to create a message and send to a user
+create a way to access the list of friends
+options on each friend to send message
+search through all users to find and send request
+switch from pending message to read after viewing
+create a way to edit profile after signup
+error handing for all routes and possible bad requests
+views for everything
+	friend list
+	send friend request
+	user search
+	unread messages
+	view profile
+	complete login page
+create sessions for the logged in user
+divide mongoose models
+encryption for user passwords
+
+Done:
+create a user
+create a inbox for the user
+create a list of friends for the user
+create a conversation list for each user
+create a way to add friends
+
+
+
+
+Schemas:
+
+User
+	information
+	inbox
+		list of threads
+			messages in each thread
+				user that sent each message
+					timestap for that message
+					status of the message (read/unread)
+				text within the message
+				

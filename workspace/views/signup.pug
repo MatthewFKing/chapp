@@ -1,0 +1,21 @@
+extends layout
+block content
+	include nav.pug
+	.main.container
+		.row
+			.col-md-6.col.md-offset
+				h1.display-4.m-b-2 Sign Up
+				form(method='POST' action='/signup')
+					.form-group
+						label(for='email') Email Address:
+						input#email.form-control(type='email' placeholder='name@email.com' name='email')
+					.form-group
+						label(for='name') Name:
+						input#email.form-control(type='text' placeholder='Name' name='name')
+					.form-group
+						label(for='password') Password:
+						input#email.form-control(type='password' name='password')
+					.form-group
+						label(for='confirmPassword') Confirm Password:
+						input#email.form-control(type='password' name='confirmPassword')
+					button.btn.btn-primary(type='submit') Sign Up

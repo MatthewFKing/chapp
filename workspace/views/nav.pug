@@ -3,7 +3,12 @@ block content
 		nav.navbar.navbar-dark.bg-primary
 			a.navbar-brand(href='#') ChatApp
 				div.navbar-nav
-					a.nav-item.nav-link(href='#') Home
+					a.nav-item.nav-link(href='/') Home
+					a.nav-item.nav-link(href='/profile') Profile
+					a.nav-item.nav-link(href='/signup') Sign Up
+					a.nav-item.nav-link(href='/test') TestUser
+					a.nav-item.nav-link(href='/friend-test') TestFriend
+					a.nav-item.nav-link(href='/msg-test') TestMessage
 				form(method='GET' action='/logout')
 					if (name)
 						button.btn.btn-danger(type='submit' href='/logout') Logout
