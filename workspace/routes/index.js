@@ -3,16 +3,33 @@ const router = express.Router();
 const User = require('../models/user');
 const mid = require('../middleware');
 
-router.get('/profile/:id', (req, res, next) =>{
-   console.log(req.params.id); 
-   User.findById(req.params.id)
+router.param('uID', function(req, res, next, id){
+	User.findById(id, function(err, doc){
+		if(err) return next(err);
+		if(!doc) {
+			err = new Error('Not Found');
+			err.status = 404;
+			return next(err);
+		}
+		req.user = doc;
+		return next();
+	});
+});
+
+router.get('/sendmsg/:uID', (req, res, next) =>{
+  res.render('sendmsg',{user: req.user});
+});
+
+router.get('/profile/:uID', (req, res, next) =>{
+   console.log(req.params.uID);
+   User.findById(req.params.uID)
     .exec((error, user) =>{
        if (error) {
            return next(error);
        } else {
            res.render('profile', {data: user});
        }
-           
+
        });
 });
 
@@ -113,63 +130,37 @@ router.post('/signup', (req, res, next) =>{
       if (error){
         return next(error);
       } else {
-        res.redirect('/');
-      }
+      User.hash(user, (error, user) =>{
+        if (error) return next(error);
+      });
+    }
+    res.redirect('/');
     });
+
   } else {
     let err = new Error('Please fill in all fields.');
     err.status = 400;
     return next(err);
   }
-});
 
-router.get('/test', (req, res, next) =>{
-    let testUser1 = new User({
-        email: 'test@test.com',
-        name: 'test1',
-        password: '123',
-        friends: [],
-        inbox: []
-    });
 
-    let testUser2 = new User({
-        email: 'test2@test.com',
-        name: 'test2',
-        password: '123',
-        friends: [],
-        inbox: []
-    });
-
-    User.create(testUser1, (error, user) =>{
-        if (error){
-            return next(error);
-        } else {
-            User.create(testUser2, (error, user) =>{
-        if (error){
-            return next(error);
-        } else {
-            res.redirect('/');
-        }
-    });
-        }
-    });
 });
 
 router.get('/post', (req,res,next) =>{
-   res.render('post'); 
+   res.render('post');
 });
 
-router.get('/friendlist/:id', (req, res, next)=> {
-   User.findById(req.params.id, (err, user) =>{
+router.get('/friendlist/:uID', (req, res, next)=> {
+   User.findById(req.params.uID, (err, user) =>{
       if (err) console.log(err);
       res.render('friendlist', {data: user.friends});
    });
 });
 
-router.get('/reqfriend/:id', (req, res, next) =>{
+router.get('/reqfriend/:uID', (req, res, next) =>{
     User.findById(req.session.userId, (err, me) =>{
         if (err) console.log(err);
-        User.findById(req.params.id, (err, reqdFriend) =>{
+        User.findById(req.params.uID, (err, reqdFriend) =>{
            if (err) console.log(err);
                 me.friends.push({
                     userID: reqdFriend._id,
@@ -186,7 +177,7 @@ router.get('/reqfriend/:id', (req, res, next) =>{
         });
     });
 });
-    
+
 
 router.get('/msg-test', (req, res, next) => {
     let userData = {

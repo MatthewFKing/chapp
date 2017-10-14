@@ -13,3 +13,5 @@ block content
 					a.display-5.list-group-item(href='/inbox/' + data._id) Inbox: #{data.inbox.length}
 				form(method='GET' action='/reqfriend/' + data._id)
 					button.btn.btn-primary(type='submit') Make Friends
+				form(method='GET' action='/sendmsg/' + data._id)
+					button.btn.btn-primary(type='submit') Send Message
