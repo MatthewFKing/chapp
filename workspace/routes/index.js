@@ -16,21 +16,75 @@ router.param('uID', function(req, res, next, id){
 	});
 });
 
+router.post('/replymsg/:mID', (req, res, next) =>{
+     User.findById(req.session.userId)
+        .exec((error, user) => {
+            if(error) return next(error);
+            for(let i = 0; i<user.inbox.length; i++) {
+                if (user.inbox[i]._id.equals(req.params.mID)){
+                    return console.log(user.inbox[i].users);
+                }
+            }
+            next();
+        });
+});
+
+router.get('/message/:mID', (req,res,next) =>{
+    User.findById(req.session.userId)
+        .exec((error, user) => {
+            if(error) return next(error);
+            for(let i = 0; i<user.inbox.length; i++) {
+                if (user.inbox[i]._id.equals(req.params.mID)){
+                    res.render('message', {message: user.inbox[i]});
+                }
+            
+            }
+        });
+});
+
+router.get('/inbox', (req, res, next) => {
+    User.findById(req.session.userId)
+        .exec((error, user) => {
+            if (error) return next(error);
+            res.render('inbox', {data: user, messages: user.inbox});
+        });
+});
+
 router.get('/sendmsg/:uID', (req, res, next) =>{
   res.render('sendmsg',{user: req.user});
 });
 
-router.get('/profile/:uID', (req, res, next) =>{
-   console.log(req.params.uID);
-   User.findById(req.params.uID)
-    .exec((error, user) =>{
-       if (error) {
-           return next(error);
-       } else {
-           res.render('profile', {data: user});
-       }
+router.post('/sendmsg/:uID', (req, res, next) =>{
+    User.findById(req.session.userId)
+        .exec((error, fromUser) =>{
+            if(error) return next(error);
+        User.sendMessage(req.user, fromUser, req.body.message, function(error, user){
+			if(error || !user){
+				var err = new Error('Message not sent');
+				err.status = 401;
+				return next(err);
+			}
+    });
+    res.render('profile', {data: req.user, friend: true});
+    
+ });
+    
+});
 
-       });
+router.get('/profile/:uID', (req, res, next) =>{
+    User.findById(req.session.userId)
+        .exec((error, user) => {
+           if (error) return next(error);
+           for (let i = 0; i < user.friends.length; i++) {
+               console.log(req.user._id);
+               console.log(user.friends[i].userID);
+               if (user.friends[i].userID.equals(req.user._id)){
+                   console.log('matched');
+                  return res.render('profile', {data: req.user, friend: true});
+               }
+           }
+           res.render('profile', {data: req.user, friend: false});
+        });
 });
 
 router.get('/profile', mid.requiresLogin, (req, res, next) => {
@@ -94,7 +148,6 @@ router.post('/login', (req, res, next) =>{
 				return next(err);
 			} else {
 				req.session.userId = user._id;
-				console.log(req.session.userId);
 				return res.redirect('/profile');
 			}
 		});
@@ -134,7 +187,8 @@ router.post('/signup', (req, res, next) =>{
         if (error) return next(error);
       });
     }
-    res.redirect('/');
+    req.session.userId = user._id;
+	return res.redirect('/profile');
     });
 
   } else {
@@ -151,10 +205,7 @@ router.get('/post', (req,res,next) =>{
 });
 
 router.get('/friendlist/:uID', (req, res, next)=> {
-   User.findById(req.params.uID, (err, user) =>{
-      if (err) console.log(err);
-      res.render('friendlist', {data: user.friends});
-   });
+      res.render('friendlist', {data: req.user.friends});
 });
 
 router.get('/reqfriend/:uID', (req, res, next) =>{
@@ -174,6 +225,7 @@ router.get('/reqfriend/:uID', (req, res, next) =>{
                 });
                 me.save();
                 reqdFriend.save();
+                return res.redirect('/profile');
         });
     });
 });

@@ -1,0 +1,9 @@
+extends layout
+block content
+    include nav.pug
+    .main.container.clearfix
+        .row
+            .col-md-8
+                h1.display-5 Inbox:
+                each val in messages
+                    a.list-group-item-action.list-group-item(href='/message/'+ val._id) #{val.messages[0].fromName}

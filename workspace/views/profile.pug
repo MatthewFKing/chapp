@@ -10,8 +10,11 @@ block content
 				a.display-5.list-group-item(href='/friendlist/' + data._id) Friends: #{data.friends.length}
 				h6.display-6.list-group-item #{data.email}
 				if (data._id == currentUser)
-					a.display-5.list-group-item(href='/inbox/' + data._id) Inbox: #{data.inbox.length}
-				form(method='GET' action='/reqfriend/' + data._id)
-					button.btn.btn-primary(type='submit') Make Friends
-				form(method='GET' action='/sendmsg/' + data._id)
-					button.btn.btn-primary(type='submit') Send Message
+					a.display-5.list-group-item(href='/inbox') Inbox: #{data.inbox.length}
+				if (data._id != currentUser)
+					if !friend
+						form(method='GET' action='/reqfriend/' + data._id)
+							button.btn.btn-primary(type='submit') Make Friends
+					if friend
+						form(method='GET' action='/sendmsg/' + data._id)
+							button.btn.btn-primary(type='submit') Send Message

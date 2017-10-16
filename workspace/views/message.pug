@@ -1,0 +1,14 @@
+extends layout
+block content
+	include nav.pug
+	.main.container.clearfix
+		.row
+			.col-md-8
+				each val in message.messages
+					h1.display-5 From: #{val.fromName}
+					h1.display-5 #{val.message}
+				form(action='/replymsg/'+ message._id method='POST')
+					.form-group
+						label(for='message') Reply:
+						textarea.form-control(rows='5' name='message')
+					button.btn.btn-primary(type='submit') Send

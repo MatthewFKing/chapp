@@ -4,9 +4,9 @@ const bcrypt = require('bcrypt');
 
 const MessageSchema = new Schema({
    message: String,
-   conversationId: Schema.Types.ObjectId,
-   createdAt: {type: Date, default: Date.now},
-   status: String
+   fromName: String,
+   fromId: Schema.Types.ObjectId,
+   createdAt: {type: Date, default: Date.now}
 });
 
 const ConversationSchema = new Schema({
@@ -40,29 +40,6 @@ let UserSchema = new Schema({
     inbox: [ConversationSchema]
 });
 
-UserSchema.statics.sendMsg = (userData, email, msg, callback) =>{
-    User.findOne({email: email})
-        .exec((error, user) =>{
-            if (error) {
-                return callback(error);
-            } else if (!user) {
-                let err = new Error('No User Found');
-                err.status = 401;
-                return callback(err);
-            }
-            let message = {
-                message: msg,
-                status: 'unread'
-            };
-            let conversation = {
-                users: ['59de7541be27b37583f88c1d', '59de7541be27b37583f88c1c'],
-                messages: message
-            };
-            user.inbox.push(conversation);
-            user.save();
-        });
-};
-
 UserSchema.statics.authenticate = function(email, password, callback){
 	User.findOne({email: email})
 		.exec(function (error, user){
@@ -91,7 +68,40 @@ UserSchema.statics.hash = function(user, callback){
 		user.password = hash;
     user.save();
 	});
-}
+};
+
+UserSchema.statics.sendMessage = (toUser, fromUser, messageText, callback) => {
+
+    let msg = {
+        message: messageText,
+        fromName: fromUser.name,
+        fromId: fromUser._id
+    };
+    let conversation = {
+      users: [toUser._id, fromUser._id],
+      messages: msg
+    };
+    fromUser.inbox.push(conversation);
+    toUser.inbox.push(conversation);
+    toUser.save();
+    fromUser.save();
+    
+};
+
+UserSchema.statics.updateMessage = (users, messageID, messageText, callback) =>{
+    for (let i = 0; i < users.length; i++) {
+        User.findById(users[i]._id)
+            .exec((error, user) =>{
+                if (error) return callback(error);
+                for ( let x = 0; x < user.inbox.length; x++) {
+                    if (user.inbox[i]._id.equals(messageID)) {
+                        
+                        user.inbox[i].push();
+                    }
+                }
+            });
+    }
+};
 
 let User = mongoose.model('User', UserSchema);
 
