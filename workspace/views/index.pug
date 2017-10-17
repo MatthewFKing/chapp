@@ -4,12 +4,17 @@ block content
 		br
 		.container
 			.row
-				.text-box.col
-					div#list
-				.col
-					form#form(method='POST' action='/')
-						.input-group
-							input#chat_input.form-control(type='text', placeholder='...')
-							span.input-group-btn
-								input.btn.btn-primary(type='submit' value='Send')
+				form(action='/post' method='POST')
+					.form-group
+						input.form-control(type='text' placeholder='Enter a web address.' name='webshotLink')
+					button.btn.btn-primary(type='submit') Post
+			
+				// .text-box.col
+				// 	div#list
+				// .col
+				// 	form#form(method='POST' action='/')
+				// 		.input-group
+				// 			input#chat_input.form-control(type='text', placeholder='...')
+				// 			span.input-group-btn
+				// 				input.btn.btn-primary(type='submit' value='Send')
 		

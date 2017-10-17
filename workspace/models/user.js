@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
-
+const Post = require('./post');
 
 
 const FriendSchema = new Schema ({
@@ -27,7 +27,8 @@ let UserSchema = new Schema({
       required: true
     },
     friends: [FriendSchema],
-    conversations: [Schema.Types.ObjectId]
+    conversations: [Schema.Types.ObjectId],
+    posts: [Post]
 });
 
 UserSchema.statics.authenticate = function(email, password, callback){

@@ -3,6 +3,10 @@ const router = express.Router();
 const User = require('../models/user');
 const mid = require('../middleware');
 const Conversation = require('../models/conversation');
+const webshot = require('webshot');
+const request = require('request');
+const cheerio = require('cheerio');
+const Post = require('../models/post');
 
 router.param('uID', function(req, res, next, id){
 	User.findById(id, function(err, doc){
@@ -112,6 +116,9 @@ router.post('/sendmsg/:uID', (req, res, next) =>{
 ///////////////////////////////////
 
 router.get('/profile/:uID', (req, res, next) =>{
+    
+    
+    
     User.findById(req.session.userId)
         .exec((error, user) => {
            if (error) return next(error);
@@ -142,7 +149,8 @@ router.get('/profile', mid.requiresLogin, (req, res, next) => {
 ///////////////////////////////////
 
 router.get('/', (req, res, next) =>{
-    console.log(req.session);
+    
+    
 	User.findById(req.session.userId)
 		.exec((error, user) =>{
 			if (error) {
@@ -289,8 +297,47 @@ router.get('/reqfriend/:uID', (req, res, next) =>{
 ///////////////////////////////////
 
 
-router.get('/post', (req,res,next) =>{
-   res.render('post');
+router.post('/post', (req,res,next) =>{
+   let options = {
+       screenSize: {
+        width: 1024,
+        height: 1500
+        },
+       shotsize: {
+           width: 'all',
+           height: 'all'
+       }
+   };
+   
+   let url = req.body.webshotLink;
+   
+    request(url, (err, response, html) =>{
+       if (err) return next(err);
+       let $ = cheerio.load(html);
+       let htmlTitle = $('title').text();
+
+       let postData = {
+           linkUrl: url,
+           title: htmlTitle
+       };
+       
+       Post.create(postData, (err, post) => {
+          if (err) return next(err);
+          
+          webshot(url, `${post._id}.png` ,options, function(err) {
+            if(err) return next(err);
+            console.log('saved');
+       });
+        
+        post.imgFileName = post._id + '.png';
+        post.save();
+    });
+    res.redirect('back');
+});
+    
+    
+    
+    
 });
 
 
