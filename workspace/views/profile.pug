@@ -10,7 +10,7 @@ block content
 				a.display-5.list-group-item(href='/friendlist/' + data._id) Friends: #{data.friends.length}
 				h6.display-6.list-group-item #{data.email}
 				if (data._id == currentUser)
-					a.display-5.list-group-item(href='/inbox') Inbox: #{data.inbox.length}
+					a.display-5.list-group-item(href='/inbox') Inbox: #{data.conversations.length}
 				if (data._id != currentUser)
 					if !friend
 						form(method='GET' action='/reqfriend/' + data._id)

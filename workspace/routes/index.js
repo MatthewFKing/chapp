@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const mid = require('../middleware');
+const Conversation = require('../models/conversation');
 
 router.param('uID', function(req, res, next, id){
 	User.findById(id, function(err, doc){
@@ -16,29 +17,31 @@ router.param('uID', function(req, res, next, id){
 	});
 });
 
+///////////////////////////////////
+///Messages
+///////////////////////////////////
+
+
 router.post('/replymsg/:mID', (req, res, next) =>{
-     User.findById(req.session.userId)
-        .exec((error, user) => {
-            if(error) return next(error);
-            for(let i = 0; i<user.inbox.length; i++) {
-                if (user.inbox[i]._id.equals(req.params.mID)){
-                    return console.log(user.inbox[i].users);
-                }
-            }
-            next();
-        });
+    Conversation.findById(req.params.mID)
+    .exec((err, conversation) =>{
+        if (err) return next(err);
+        let messageData = {
+            message: req.body.message,
+            authorName: req.session.username,
+            authorId: req.session.userId
+        };
+        conversation.messages.push(messageData);
+        conversation.save();
+        res.redirect('back');
+    });
 });
 
 router.get('/message/:mID', (req,res,next) =>{
-    User.findById(req.session.userId)
-        .exec((error, user) => {
+    Conversation.findById(req.params.mID)
+        .exec((error, conversation) => {
             if(error) return next(error);
-            for(let i = 0; i<user.inbox.length; i++) {
-                if (user.inbox[i]._id.equals(req.params.mID)){
-                    res.render('message', {message: user.inbox[i]});
-                }
-            
-            }
+                res.render('message', {message: conversation});
         });
 });
 
@@ -46,7 +49,10 @@ router.get('/inbox', (req, res, next) => {
     User.findById(req.session.userId)
         .exec((error, user) => {
             if (error) return next(error);
-            res.render('inbox', {data: user, messages: user.inbox});
+            Conversation.find({users: user._id})
+                .exec((error, conversations) =>{
+                    res.render('inbox', {data: user, messages: conversations});
+                });
         });
 });
 
@@ -55,29 +61,61 @@ router.get('/sendmsg/:uID', (req, res, next) =>{
 });
 
 router.post('/sendmsg/:uID', (req, res, next) =>{
-    User.findById(req.session.userId)
-        .exec((error, fromUser) =>{
-            if(error) return next(error);
-        User.sendMessage(req.user, fromUser, req.body.message, function(error, user){
-			if(error || !user){
-				var err = new Error('Message not sent');
-				err.status = 401;
-				return next(err);
-			}
-    });
-    res.render('profile', {data: req.user, friend: true});
     
- });
+    //users - req.sessions.userId & req.user
+    //message - req.body.message
+    let messageData = {
+         message: req.body.message,
+         authorName: req.session.username,
+         authorId: req.session.userId
+        };
+        
+    let conversationData = {
+        users: [req.user._id,req.session.userId],
+        userNames: [req.user.name, req.session.username],
+        messages: messageData
+    };
+    
+    Conversation.create(conversationData, (err, conversation) =>{
+        if (err) return next(err);
+        
+        req.user.conversations.push(conversation._id);
+        req.user.save();
+        
+        User.findById(req.session.userId)
+            .exec((err, user) =>{
+                if (err) return next(err);
+                user.conversations.push(conversation._id);
+                user.save();
+            });
+    });
+    res.redirect('back');
+    
+//     User.findById(req.session.userId)
+//         .exec((error, fromUser) =>{
+//             if(error) return next(error);
+//         User.sendMessage(req.user, fromUser, req.body.message, function(error, user){
+// 			if(error || !user){
+// 				var err = new Error('Message not sent');
+// 				err.status = 401;
+// 				return next(err);
+// 			}
+//     });
+//     res.render('profile', {data: req.user, friend: true});
+    
+//  });
     
 });
+
+///////////////////////////////////
+///Profile
+///////////////////////////////////
 
 router.get('/profile/:uID', (req, res, next) =>{
     User.findById(req.session.userId)
         .exec((error, user) => {
            if (error) return next(error);
            for (let i = 0; i < user.friends.length; i++) {
-               console.log(req.user._id);
-               console.log(user.friends[i].userID);
                if (user.friends[i].userID.equals(req.user._id)){
                    console.log('matched');
                   return res.render('profile', {data: req.user, friend: true});
@@ -88,6 +126,7 @@ router.get('/profile/:uID', (req, res, next) =>{
 });
 
 router.get('/profile', mid.requiresLogin, (req, res, next) => {
+    console.log(req.session);
 	User.findById(req.session.userId)
 		.exec((error, user) =>{
 			if (error) {
@@ -97,6 +136,10 @@ router.get('/profile', mid.requiresLogin, (req, res, next) => {
 			}
 		});
 });
+
+///////////////////////////////////
+///Home
+///////////////////////////////////
 
 router.get('/', (req, res, next) =>{
     console.log(req.session);
@@ -112,20 +155,16 @@ router.get('/', (req, res, next) =>{
 		});
 });
 
+
+///////////////////////////////////
+///Login & Signup
+///////////////////////////////////
+
 router.get('/login', (req, res) =>{
 	res.render('login');
 });
 
-router.get('/users', (req, res, next) =>{
-	User.find({},{name: 1})
-		.exec((error, users) =>{
-			if (error) {
-				return next(error);
-			} else {
-				res.render('users', {data: users});
-			}
-		});
-});
+
 
 router.get('/logout', (req, res, next) =>{
   if(req.session){
@@ -148,6 +187,7 @@ router.post('/login', (req, res, next) =>{
 				return next(err);
 			} else {
 				req.session.userId = user._id;
+				req.session.username = user.name;
 				return res.redirect('/profile');
 			}
 		});
@@ -188,6 +228,7 @@ router.post('/signup', (req, res, next) =>{
       });
     }
     req.session.userId = user._id;
+    req.session.username = user.name;
 	return res.redirect('/profile');
     });
 
@@ -200,9 +241,22 @@ router.post('/signup', (req, res, next) =>{
 
 });
 
-router.get('/post', (req,res,next) =>{
-   res.render('post');
+///////////////////////////////////
+///Users & Friends
+///////////////////////////////////
+
+router.get('/users', (req, res, next) =>{
+	User.find({},{name: 1})
+		.exec((error, users) =>{
+			if (error) {
+				return next(error);
+			} else {
+				res.render('users', {data: users});
+			}
+		});
 });
+
+
 
 router.get('/friendlist/:uID', (req, res, next)=> {
       res.render('friendlist', {data: req.user.friends});
@@ -230,23 +284,14 @@ router.get('/reqfriend/:uID', (req, res, next) =>{
     });
 });
 
+///////////////////////////////////
+///  WIP
+///////////////////////////////////
 
-router.get('/msg-test', (req, res, next) => {
-    let userData = {
-      name: 'test2',
-      objectId: '59de6939420fa86788a02f98'
-    };
-    let email = 'test@test.com';
-    let msg = 'Hello';
-    User.sendMsg(userData, email, msg, (error, user) =>{
-       if (error) {
-           let err = new Error('nope');
-           err.status = 401;
-           next(err);
-       } else {
-           console.log(user);
-       }
-    });
+
+router.get('/post', (req,res,next) =>{
+   res.render('post');
 });
+
 
 module.exports = router;

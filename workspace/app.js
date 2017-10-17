@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
+
+//running mongo on c9 - mongod --bind_ip=$IP --nojournal
 mongoose.connect("mongodb://localhost:27017/chapp");
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

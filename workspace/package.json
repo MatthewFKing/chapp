@@ -15,7 +15,8 @@
     "pug": "^2.0.0-rc.4",
     "socket.io": "^2.0.3",
     "socket.io-cookie": "0.0.1",
-    "socketio-jwt": "^4.5.0"
+    "socketio-jwt": "^4.5.0",
+    "webshot": "^0.18.0"
   },
   "devDependencies": {},
   "scripts": {
