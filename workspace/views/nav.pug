@@ -1,16 +1,15 @@
 block content
 	body
 		nav.navbar.navbar-dark.bg-primary
-			a.navbar-brand(href='#') Chapp
+			a.navbar-brand(href='#') Mybrary
 				div.navbar-nav
 					a.nav-item.nav-link(href='/') Home
 					a.nav-item.nav-link(href='/profile') Profile
 					a.nav-item.nav-link(href='/users') Users
 					if !currentUser
 						a.nav-item.nav-link(href='/signup') Sign Up
-				form(method='GET' action='/logout')
-					if currentUser
-						button.btn.btn-danger(type='submit' href='/logout') Logout
-					else
-						button.btn.btn-danger(type='submit' href='/login') Login
-	          
+				if currentUser
+					button.btn.btn-danger#btn-logout(type='submit' href='/logout') Logout
+				else
+					button.btn.btn-danger#btn-login(type='button') Login
+          

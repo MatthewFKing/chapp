@@ -15,14 +15,16 @@ mongoose.connect("mongodb://localhost:27017/chapp");
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
-app.use(session({
+var sessionMiddleware = session({
 	secret: 'chapp',
 	resave: true,
 	saveUninitialized: false,
 	store: new MongoStore({
 		mongooseConnection: db
 	})
-}));
+});
+
+app.use(sessionMiddleware);
 
 app.use(function(req, res, next){
 	res.locals.currentUser = req.session.userId;
@@ -36,7 +38,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-io.use(ioCookieParser);
+
+io.use(function(socket, next){
+        // Wrap the express middleware
+        sessionMiddleware(socket.request, {}, next);
+    });
 
 app.use(express.static(__dirname + '/public'));
 
@@ -61,6 +67,7 @@ app.use(function(err, req, res, next) {
 });
 
 io.on('connection', (socket) => {
+  console.log(socket.sessionID);
   socket.emit('working', socket.id);
   socket.on('message', (msg) => {
     console.log(socket.id);

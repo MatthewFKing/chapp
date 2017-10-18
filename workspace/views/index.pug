@@ -4,25 +4,20 @@ block content
 		br
 		.container
 			.row
-				form.form-inline(action='/post' method='POST')
+				form.form-inline#url-form(action='/post' method='POST')
 					.form-group
 						input.form-control#url-input(type='text' placeholder='Enter a web address.' name='webshotLink')
 					button.btn.btn-primary(type='submit') Post
 		.container
 			.row
 				each val in posts
-					figure.figure
-						a(href=val.linkUrl target="_blank") 
-							img.figure-img.img-fluid.rounded(src='./images/'+val.imgFileName height='250' width='250')
-							figcaption.figure-caption #{val.title}
-							
+					.wrapper
+						figure.figure
+							button.btn.delete-button(type='button' name=val._id) X
+							a(href=val.linkUrl target="_blank") 
+								img.figure-img.img-fluid.rounded(src='./images/'+val.imgFileName height='250' width='250')
+								figcaption.figure-caption #{val.title}
+								
+								
 			
-				// .text-box.col
-				// 	div#list
-				// .col
-				// 	form#form(method='POST' action='/')
-				// 		.input-group
-				// 			input#chat_input.form-control(type='text', placeholder='...')
-				// 			span.input-group-btn
-				// 				input.btn.btn-primary(type='submit' value='Send')
-		
+			

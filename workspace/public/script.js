@@ -3,8 +3,28 @@
 					var input = $('#chat_input').val();
 					socket.emit('message', input);
 					$('#chat_input').val('');
-					return false;
+					
 			});
+			
+			$('.delete-button').click(function(e){
+				console.log(e.target.name);
+				$.ajax({
+                    type: 'DELETE',
+                    url: '/post/' + e.target.name,
+                    success: function(){
+                    	window.location.assign('/');
+                    }
+                });
+			});
+			
+			$('#btn-login').click(function(e){
+				window.location.assign('/login');
+			});
+			
+			$('#btn-logout').click(function(e){
+				window.location.assign('/logout');
+			});
+			
 
 			socket.on('message', function(data) {
 
@@ -27,3 +47,5 @@
 			socket.on('working', function(msg) {
 			//	id = msg;
 			});
+			
+			

@@ -22,10 +22,6 @@ h5{
 	display: inline;
 }
 
-.me h5{
-	display: inline;
-	color: green;
-}
 
 .me{
 	margin-left: auto;
@@ -41,10 +37,6 @@ h5{
 	flex-direction: row;
 }
 
-.not-me>h5{
-	display: inline;
-	color: blue;
-}
 
 .not-me>p{
 	background-color: lightgreen;
@@ -59,41 +51,62 @@ figure{
 	width: 250px;
 	margin: 5px 5px;
 	box-shadow: 2px 3px 2px;
+	
+	position: relative;
+
 
 }
 figcaption{
-	background-color: rgba(0,0,0,0.6)!important;
-	font-size: 1.2em;
-	padding: 5px;
+	background-color: rgba(0,0,0,0.8)!important;
+	font-size: 1.4em;
 	color: #fff!important;
-	padding-top: 0;
-	margin-top: -6px;
+	font-style: italic;
+	position:absolute;
+	bottom:0;
+	width: 100%;
 }
 
 body {
-	background-color: #E0DFD5;
+	background-color: #f2f2e8;
 	font-family: sans-serif!important;
 }
 
 .navbar.bg-primary {
-	background-color: #426161!important;
+	background-color: #2a2b2a!important;
+}
 
+.navbar .navbar-nav {
+	border-radius: 0;
+	display: inline-block;
+  	float: none;
+  	vertical-align: top;
+}
+
+.navbar {
+  text-align: center;
 }
 
 .nav-link {
-	color: #FFFAFF!important;
+	color: #f2f2e8!important;
 	font-weight:bold;
 }
 
 .btn-primary {
-	background-color: #305252;
-	border-color: #305252;
+	background-color: #246a73;
+	border-color: #246a73;
+}
+
+.login-form {
+	display: inline-block;
+	float:right;
+	margin: 0;
 }
 
 .btn-danger {
-	background-color: #FC6042;
-	border-color: #FC6042;
+	background-color: #931621;
+	border-color: #931621;
 	font-weight:bold;
+	
 }
 
 .list-group-item {
@@ -101,12 +114,20 @@ body {
 }
 
 .navbar-brand {
-	color: #FFFAFF!important;
-	font-weight: bold;
+	color: #e4572e!important;
+	font-size: x-large;
+	font-style: italic;
+	font-weight: bolder;
+	float: none;
 }
 
 #url-input {
 	width: 400px;
+}
+
+#url-form {
+	width: 50%;
+	margin: 0 auto;
 }
 
 
@@ -115,4 +136,40 @@ body {
 	border: 1px dotted #E0DFD5;
 	color: #E0DFD5;
 	background: rgba(0,0,0,0);
+}
+
+.wrapper {
+	display: inline;
+}
+
+.delete-button{
+	position: absolute;
+	background: rgba(50,50,50,.7);
+	color: white;
+	height: 30px;
+	width: 30px;
+	padding: 0;
+	font-weight: bold;
+	right: 5px;
+	visibility: hidden;
+}
+
+.wrapper:hover .delete-button{
+	visibility: visible;
+}
+#delete-post{
+	padding: 0;
+	margin: 0;
+}
+
+img {
+  width: 600px;
+  height: 450px;
+  background: url(loading.gif) 50% no-repeat;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.avatar{
+	width: 20%;
 }

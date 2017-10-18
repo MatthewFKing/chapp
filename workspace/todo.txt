@@ -1,28 +1,29 @@
 To-Do:
-create a list of messages for each conversation
-make friends unique
 add pending request for friends
-add friend to both the sender and receiver
-add a way to create a message and send to a user
-create a way to access the list of friends
-options on each friend to send message
-search through all users to find and send request
 switch from pending message to read after viewing
 create a way to edit profile after signup
 error handing for all routes and possible bad requests
-views for everything
-	friend list
-	send friend request
-	user search
-	unread messages
-	view profile
-	complete login page
-	titles for all the pages
-create sessions for the logged in user
-divide mongoose models
-encryption for user passwords
-get name to work on chat
-way to post previews of pages/ articles
+views for titles for all the pages
+chat feature
+push notifications to the user for messages
+add a way to upload user image
+folders to divide the posts
+news API
+browser extention for adding pages without going to the site
+split routes to multiple files
+sort by post topic
+sort by post age
+search by post topic/name
+styling for everything
+possibly using something other than mongodb
+sharing posts with friends
+adding custom tags or text to posts
+clean up code and variable names
+marking posts as read
+deleting image file when post is deleted
+removing post from user schema when post is deleted
+
+
 
 Done:
 create a user
@@ -30,8 +31,19 @@ create a inbox for the user
 create a list of friends for the user
 create a conversation list for each user
 create a way to add friends
-
-
+options on each friend to send message
+search through all users to find and send request
+create a list of messages for each conversation
+encryption for user passwords
+way to post previews of pages/ articles
+divide mongoose models
+create sessions for the logged in user
+views for friend list
+views for send friend request
+views for user search
+views for unread messages
+views for view profile
+views for complete login page
 
 
 Schemas:

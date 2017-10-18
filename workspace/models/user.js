@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
-const Post = require('./post');
-
 
 const FriendSchema = new Schema ({
     userID: Schema.Types.ObjectId,
