@@ -54,3 +54,65 @@ h5{
 .navbar button{
 	float:right;
 }
+
+figure{
+	width: 250px;
+	margin: 5px 5px;
+	box-shadow: 2px 3px 2px;
+
+}
+figcaption{
+	background-color: rgba(0,0,0,0.6)!important;
+	font-size: 1.2em;
+	padding: 5px;
+	color: #fff!important;
+	padding-top: 0;
+	margin-top: -6px;
+}
+
+body {
+	background-color: #E0DFD5;
+	font-family: sans-serif!important;
+}
+
+.navbar.bg-primary {
+	background-color: #426161!important;
+
+}
+
+.nav-link {
+	color: #FFFAFF!important;
+	font-weight:bold;
+}
+
+.btn-primary {
+	background-color: #305252;
+	border-color: #305252;
+}
+
+.btn-danger {
+	background-color: #FC6042;
+	border-color: #FC6042;
+	font-weight:bold;
+}
+
+.list-group-item {
+	background-color: #E0DFD5!important;
+}
+
+.navbar-brand {
+	color: #FFFAFF!important;
+	font-weight: bold;
+}
+
+#url-input {
+	width: 400px;
+}
+
+
+
+.figure:hover {
+	border: 1px dotted #E0DFD5;
+	color: #E0DFD5;
+	background: rgba(0,0,0,0);
+}

@@ -28,7 +28,7 @@ let UserSchema = new Schema({
     },
     friends: [FriendSchema],
     conversations: [Schema.Types.ObjectId],
-    posts: [Post]
+    posts: [Schema.Types.ObjectId]
 });
 
 UserSchema.statics.authenticate = function(email, password, callback){
@@ -76,7 +76,7 @@ UserSchema.statics.hash = function(user, callback){
 //     toUser.inbox.push(conversation);
 //     toUser.save();
 //     fromUser.save();
-    
+
 // };
 
 // UserSchema.statics.updateMessage = (users, messageID, messageText, callback) =>{

@@ -65,7 +65,7 @@ router.get('/sendmsg/:uID', (req, res, next) =>{
 });
 
 router.post('/sendmsg/:uID', (req, res, next) =>{
-    
+
     //users - req.sessions.userId & req.user
     //message - req.body.message
     let messageData = {
@@ -73,19 +73,19 @@ router.post('/sendmsg/:uID', (req, res, next) =>{
          authorName: req.session.username,
          authorId: req.session.userId
         };
-        
+
     let conversationData = {
         users: [req.user._id,req.session.userId],
         userNames: [req.user.name, req.session.username],
         messages: messageData
     };
-    
+
     Conversation.create(conversationData, (err, conversation) =>{
         if (err) return next(err);
-        
+
         req.user.conversations.push(conversation._id);
         req.user.save();
-        
+
         User.findById(req.session.userId)
             .exec((err, user) =>{
                 if (err) return next(err);
@@ -94,7 +94,7 @@ router.post('/sendmsg/:uID', (req, res, next) =>{
             });
     });
     res.redirect('back');
-    
+
 //     User.findById(req.session.userId)
 //         .exec((error, fromUser) =>{
 //             if(error) return next(error);
@@ -106,9 +106,9 @@ router.post('/sendmsg/:uID', (req, res, next) =>{
 // 			}
 //     });
 //     res.render('profile', {data: req.user, friend: true});
-    
+
 //  });
-    
+
 });
 
 ///////////////////////////////////
@@ -116,9 +116,9 @@ router.post('/sendmsg/:uID', (req, res, next) =>{
 ///////////////////////////////////
 
 router.get('/profile/:uID', (req, res, next) =>{
-    
-    
-    
+
+
+
     User.findById(req.session.userId)
         .exec((error, user) => {
            if (error) return next(error);
@@ -149,17 +149,10 @@ router.get('/profile', mid.requiresLogin, (req, res, next) => {
 ///////////////////////////////////
 
 router.get('/', (req, res, next) =>{
-    
-    
-	User.findById(req.session.userId)
-		.exec((error, user) =>{
-			if (error) {
-				return next(error);
-			} else if (!user) {
-				res.render('login');
-			} else {
-			    res.render('index', {name: user.name});
-			}
+	Post.find({author: req.session.userId})
+		.exec((err, userPosts) =>{
+			if (err) return next(err);
+			return res.render('index', {posts: userPosts});
 		});
 });
 
@@ -298,46 +291,44 @@ router.get('/reqfriend/:uID', (req, res, next) =>{
 
 
 router.post('/post', (req,res,next) =>{
-   let options = {
-       screenSize: {
-        width: 1024,
-        height: 1500
-        },
-       shotsize: {
-           width: 'all',
-           height: 'all'
-       }
-   };
-   
+
+
    let url = req.body.webshotLink;
-   
+
     request(url, (err, response, html) =>{
        if (err) return next(err);
        let $ = cheerio.load(html);
        let htmlTitle = $('title').text();
+			 console.log(htmlTitle);
 
        let postData = {
            linkUrl: url,
-           title: htmlTitle
+           title: htmlTitle,
+					 author: req.session.userId
        };
-       
+
        Post.create(postData, (err, post) => {
           if (err) return next(err);
-          
-          webshot(url, `${post._id}.png` ,options, function(err) {
+
+					let options = {
+							quality: 5
+			    };
+
+					post.imgFileName = `${post._id}.png`;
+					post.save();
+
+          webshot(url, `./public/images/${post._id}.png` ,options, function(err) {
             if(err) return next(err);
             console.log('saved');
+						return res.redirect('back');
        });
-        
-        post.imgFileName = post._id + '.png';
-        post.save();
+
+
+
     });
-    res.redirect('back');
+
 });
-    
-    
-    
-    
+
 });
 
 
