@@ -5,8 +5,8 @@ block content
 		.row
 			.col-md-8
 				each val in message.messages
-					h1.display-5 From: #{val.authorName}
-					h1.display-5 #{val.message}
+					h5.display-5 From: #{val.authorName}
+					h5.display-5 #{val.message}
 				form(action='/replymsg/'+ message._id method='POST')
 					.form-group
 						label(for='message') Reply:

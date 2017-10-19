@@ -1,48 +1,3 @@
-.text-box{
-	height: 300px;
-	overflow: auto;
-	border: 1px solid black;
-}
-
-p{
-	border:1px solid lightblue;
-	padding: 5px;
-	border-radius: 15%;
-	margin:5px;
-	margin-top: 0;
-	background-color: lightblue;
-	color:black;
-}
-
-h5{
-	margin-top: 5px;
-}
-
-.me p{
-	display: inline;
-}
-
-
-.me{
-	margin-left: auto;
-	text-align: right;
-	word-wrap: break-word;
-	border:none;
-	display: flex;
-	flex-direction: row-reverse;
-}
-.not-me{
-	align-self:flex-start;
-	display: flex;
-	flex-direction: row;
-}
-
-
-.not-me>p{
-	background-color: lightgreen;
-	border-color: lightgreen;
-}
-
 .navbar button{
 	float:right;
 }
@@ -51,7 +6,6 @@ figure{
 	width: 250px;
 	margin: 5px 5px;
 	box-shadow: 2px 3px 2px;
-	
 	position: relative;
 
 
@@ -64,6 +18,9 @@ figcaption{
 	position:absolute;
 	bottom:0;
 	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: left;
 }
 
 body {
@@ -103,10 +60,10 @@ body {
 }
 
 .btn-danger {
-	background-color: #931621;
-	border-color: #931621;
+	background-color: #e4572e;
+	border-color: #e4572e;
 	font-weight:bold;
-	
+
 }
 
 .list-group-item {
@@ -162,14 +119,35 @@ body {
 	margin: 0;
 }
 
-img {
-  width: 600px;
-  height: 450px;
-  background: url(loading.gif) 50% no-repeat;
-  border: 1px solid black;
-  border-radius: 5px;
+.inbox-item {
+	background-color: #2a2b2a!important;
+	color: #e4572e!important;
+	font-weight: bold;
+}
+
+.inbox-text {
+	position: absolute;
+	display: inline;
+	color: white;
+	font-weight:normal;
+	left: 200px;
+}
+
+#profile-name {
+	font-weight: bold;
+	color: #e4572e;
+	margin: 0 auto;
+}
+
+.profile-item {
+	background-color: #2a2b2a!important;
+	color: white!important;
+}
+
+#profile-wrapper {
+	padding-top: 25px;
 }
 
 .avatar{
-	width: 20%;
+	width: 15%;
 }

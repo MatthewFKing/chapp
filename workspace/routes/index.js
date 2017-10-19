@@ -140,7 +140,6 @@ router.get('/profile/:uID', mid.requiresLogin, (req, res, next) =>{
            if (error) return next(error);
            for (let i = 0; i < user.friends.length; i++) {
                if (user.friends[i].userID.equals(req.user._id)){
-                   console.log('matched');
                   return res.render('profile', {data: req.user, friend: true});
                }
            }
@@ -149,7 +148,6 @@ router.get('/profile/:uID', mid.requiresLogin, (req, res, next) =>{
 });
 
 router.get('/profile', mid.requiresLogin, (req, res, next) => {
-    console.log(req.session);
 	User.findById(req.session.userId)
 		.exec((error, user) =>{
 			if (error) {
@@ -281,9 +279,9 @@ router.get('/friendlist/:uID', mid.requiresLogin, (req, res, next)=> {
 
 router.get('/reqfriend/:uID', mid.requiresLogin, (req, res, next) =>{
     User.findById(req.session.userId, (err, me) =>{
-        if (err) console.log(err);
+        if (err) return next(err);
         User.findById(req.params.uID, (err, reqdFriend) =>{
-           if (err) console.log(err);
+           if (err) return next(err);
                 me.friends.push({
                     userID: reqdFriend._id,
                     name: reqdFriend.name,
@@ -308,19 +306,13 @@ router.get('/reqfriend/:uID', mid.requiresLogin, (req, res, next) =>{
 
 router.post('/post', mid.requiresLogin, (req,res,next) =>{
 
-
    let url = req.body.webshotLink;
 
     request(url, (err, response, html) =>{
        if (err) return next(err);
        let $ = cheerio.load(html);
        let htmlTitle = $('title').text();
-			 console.log(htmlTitle);
-			 
-        if (htmlTitle.length > 40){
-            htmlTitle = htmlTitle.slice(0,37) + "...";
-        }
-        
+
        let postData = {
            linkUrl: url,
            title: htmlTitle,
@@ -331,15 +323,12 @@ router.post('/post', mid.requiresLogin, (req,res,next) =>{
           if (err) return next(err);
 
 			let options = {
-					quality: 5,
-					siteType:'html',
-					streamType: 'jpeg'
+					quality: 75,
+					siteType:'html'
 	        };
 
 			post.imgFileName = `${post._id}.png`;
 			post.save();
-			
-			
 
           webshot(html, `./public/images/${post._id}.png` ,options, function(err) {
             if(err) return next(err);
@@ -349,23 +338,22 @@ router.post('/post', mid.requiresLogin, (req,res,next) =>{
 			       user.posts.push(post._id);
 			    });
             console.log('saved');
-				return res.redirect('back');		
+				return res.redirect('back');
             });
-            
+
         });
     });
 });
 
 router.delete('/post/:pID', (req, res, next) =>{
-    
+
     req.post.remove((err) =>{
         if (err){
-           return next(err); 
+           return next(err);
         } else {
         return res.send('done');
         }
     });
-    
 });
 
 

@@ -67,10 +67,9 @@ app.use(function(err, req, res, next) {
 });
 
 io.on('connection', (socket) => {
-  console.log(socket.sessionID);
+  //console.log(socket.request.sessionID);
   socket.emit('working', socket.id);
   socket.on('message', (msg) => {
-    console.log(socket.id);
 		let data = {
 			name: '',
 			msg: msg,

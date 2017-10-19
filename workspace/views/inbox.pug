@@ -6,4 +6,5 @@ block content
             .col-md-8
                 h1.display-5 Inbox:
                 each val in messages
-                    a.list-group-item-action.list-group-item(href='/message/'+ val._id) #{val.userNames}
+                    a.list-group-item-action.list-group-item.inbox-item(href='/message/'+ val._id) #{val.userNames} (#{val.messages.length})
+                      p.inbox-text #{val.messages[0].message}
